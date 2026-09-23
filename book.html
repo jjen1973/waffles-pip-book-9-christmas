@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Read Waffles & Pip and the Very Suspicious Christmas Trail, Book 9.">
+  <title>Read Book 9 · Waffles &amp; Pip</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; color: #253147; background: #dceaf1; font-family: Georgia, serif; }
+    nav { position: sticky; top: 0; z-index: 2; display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 10px; padding: 10px; background: #173f35f2; color: white; }
+    nav a, nav button { border: 1px solid #fff8; border-radius: 999px; padding: 9px 14px; color: white; background: transparent; font: inherit; cursor: pointer; text-decoration: none; }
+    nav button:disabled { opacity: .45; cursor: default; }
+    nav :focus-visible { outline: 3px solid #f0bd42; outline-offset: 2px; }
+    #progress { min-width: 94px; text-align: center; }
+    main { padding: 24px 12px 48px; }
+    .sheet { width: min(1060px, 100%); min-height: min(720px, calc(100vh - 110px)); margin: 0 auto; overflow: hidden; background: #fffdf8; border-radius: 18px; box-shadow: 0 18px 50px #18324233; }
+    .cover { display: grid; place-items: center; background: #163d35; }
+    .cover img { display: block; width: min(100%, 520px); max-height: calc(100vh - 110px); object-fit: contain; }
+    .spread { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(320px, .95fr); }
+    .picture { min-height: 680px; background: #e8f1f4; }
+    .picture img { width: 100%; height: 100%; min-height: 680px; display: block; object-fit: cover; }
+    .story { display: flex; flex-direction: column; padding: clamp(28px, 5vw, 58px); font-size: clamp(18px, 2.1vw, 25px); line-height: 1.45; }
+    .story p { margin: 0 0 .85em; }
+    .story footer { margin-top: auto; padding-top: 20px; color: #7a5144; text-align: right; font-size: 15px; }
+    [hidden] { display: none !important; }
+    @media (max-width: 760px) {
+      .spread { grid-template-columns: 1fr; }
+      .picture, .picture img { min-height: 0; height: auto; max-height: 64vh; object-fit: contain; }
+      .story { padding: 28px 24px 34px; }
+    }
+  </style>
+</head>
+<body>
+  <nav aria-label="Book controls">
+    <a href="index.html">Book 9 home</a>
+    <a href="https://jjen1973.github.io/pip-waffles-website/">All books</a>
+    <button id="prev" type="button">← Back</button>
+    <span id="progress" role="status" aria-live="polite"></span>
+    <button id="next" type="button">Next →</button>
+  </nav>
+  <main id="reader"></main>
+  <script src="reader.js"></script>
+  <script>
+    const data = window.BOOK_READER;
+    const reader = document.querySelector('#reader');
+    const cover = document.createElement('section');
+    cover.className = 'sheet cover';
+    cover.setAttribute('aria-label', 'Book cover');
+    cover.innerHTML = `<img src="${data.cover}" alt="Cover of ${data.title}">`;
+    reader.append(cover);
+
+    data.pages.forEach((page, index) => {
+      const section = document.createElement('section');
+      section.className = 'sheet spread';
+      section.hidden = true;
+      section.setAttribute('aria-label', `Page ${index + 1}`);
+      const picture = document.createElement('div');
+      picture.className = 'picture';
+      const image = document.createElement('img');
+      image.src = page.image;
+      image.alt = page.alt;
+      picture.append(image);
+      const story = document.createElement('div');
+      story.className = 'story';
+      page.text.split(/\n\s*\n/).forEach(text => {
+        const paragraph = document.createElement('p');
+        paragraph.textContent = text;
+        story.append(paragraph);
+      });
+      const footer = document.createElement('footer');
+      footer.textContent = `${index + 1} / ${data.pages.length}`;
+      story.append(footer);
+      section.append(picture, story);
+      reader.append(section);
+    });
+
+    const sheets = [...document.querySelectorAll('.sheet')];
+    let current = 0;
+    function show() {
+      sheets.forEach((sheet, index) => { sheet.hidden = index !== current; });
+      document.querySelector('#progress').textContent = current === 0 ? 'Cover' : `Page ${current} of ${data.pages.length}`;
+      document.querySelector('#prev').disabled = current === 0;
+      document.querySelector('#next').disabled = current === sheets.length - 1;
+      window.scrollTo(0, 0);
+    }
+    function turn(delta) {
+      current = Math.max(0, Math.min(sheets.length - 1, current + delta));
+      show();
+    }
+    document.querySelector('#prev').addEventListener('click', () => turn(-1));
+    document.querySelector('#next').addEventListener('click', () => turn(1));
+    document.addEventListener('keydown', event => {
+      if (event.key === 'ArrowRight') turn(1);
+      if (event.key === 'ArrowLeft') turn(-1);
+    });
+    show();
+  </script>
+</body>
+</html>
