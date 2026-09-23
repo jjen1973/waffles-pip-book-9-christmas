@@ -1,8 +1,8 @@
-# Waffles & Pip Book 9
+# Waffles & Pip and the Very Suspicious Christmas Trail
 
-Public development home for the upcoming Waffles & Pip Christmas adventure.
+Public development home for Waffles & Pip Book 9, a Christmas adventure.
 
-- `manuscripts/` is ready for the Book 9 manuscript when it arrives.
+- `manuscripts/book-09-the-very-suspicious-christmas-trail-manuscript.md` contains the Book 9 manuscript.
 - `index.html` is the simple public coming-soon page.
 - The main Waffles & Pip bookshelf is at https://jjen1973.github.io/pip-waffles-website/.
 
